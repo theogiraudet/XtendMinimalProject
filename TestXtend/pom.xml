@@ -19,7 +19,7 @@
 		<ecore-xtext-version>1.5.0</ecore-xtext-version>
 		<ecore-xcore-version>1.16.0</ecore-xcore-version>
 		<ecore-xcore-lib-version>1.5.0</ecore-xcore-lib-version>
-		
+
 		<xtend-path>${basedir}/src/main/xtend</xtend-path>
 		<xcore-path>${basedir}/model</xcore-path>
 		<xtend-gen-path>${basedir}/src/main/javagen</xtend-gen-path>
@@ -88,7 +88,6 @@
 				</configuration>
 			</plugin>
 
-			<!-- Adds the generated sources to the compiler input -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
@@ -101,8 +100,6 @@
 							<goal>add-source</goal>
 						</goals>
 						<configuration>
-							<!-- This should be in sync with xtext-maven-plugin//source-roots, 
-								except for /model directory -->
 							<sources>
 								<source>${xtend-gen-path}</source>
 							</sources>
@@ -111,7 +108,6 @@
 				</executions>
 			</plugin>
 
-			<!-- Generates the Xtend and Xcore models -->
 			<plugin>
 				<groupId>org.eclipse.xtext</groupId>
 				<artifactId>xtext-maven-plugin</artifactId>
@@ -125,6 +121,7 @@
 					</execution>
 				</executions>
 				<configuration>
+					<compilerSourceLevel>1.8</compilerSourceLevel> <compilerTargetLevel>1.8</compilerTargetLevel>
 					<languages>
 						<language>
 							<setup>org.eclipse.emf.codegen.ecore.xtext.GenModelSupport</setup>
@@ -144,14 +141,12 @@
 									<outputDirectory>${xcore-gen-path}</outputDirectory>
 								</outputConfiguration>
 							</outputConfigurations>
-
 						</language>
 					</languages>
 					<sourceRoots>
 						<root>${xtend-path}</root>
 						<root>${xcore-path}</root>
 					</sourceRoots>
-					<javaSourceVersion>1.8</javaSourceVersion>
 				</configuration>
 				<dependencies>
 					<dependency>
