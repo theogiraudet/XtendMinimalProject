@@ -1,0 +1,187 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>fr.theogiraudet</groupId>
+	<version>1.0.0-SNAPSHOT</version>
+	<artifactId>fr.theogiraudet.foo</artifactId>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+
+		<core-resources-version>3.7.100</core-resources-version>
+		<emf-version>2.23.0</emf-version>
+		<emf-common-version>2.21.0</emf-common-version>
+		<xtext-version>2.24.0</xtext-version>
+		<ecore-xtext-version>1.5.0</ecore-xtext-version>
+		<ecore-xcore-version>1.16.0</ecore-xcore-version>
+		<ecore-xcore-lib-version>1.5.0</ecore-xcore-lib-version>
+		
+		<xtend-path>${basedir}/src/main/xtend</xtend-path>
+		<xcore-path>${basedir}/model</xcore-path>
+		<xtend-gen-path>${basedir}/src/main/javagen</xtend-gen-path>
+		<xcore-gen-path>${basedir}/src/main/javagen</xcore-gen-path>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.emf</groupId>
+			<artifactId>org.eclipse.emf.common</artifactId>
+			<version>${emf-common-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.emf</groupId>
+			<artifactId>org.eclipse.emf.ecore</artifactId>
+			<version>${emf-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.emf</groupId>
+			<artifactId>org.eclipse.emf.ecore.xcore.lib</artifactId>
+			<version>${ecore-xcore-lib-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xtext</groupId>
+			<artifactId>org.eclipse.xtext.xbase.lib</artifactId>
+			<version>${xtext-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xtend</groupId>
+			<artifactId>org.eclipse.xtend.lib</artifactId>
+			<version>${xtext-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.emf</groupId>
+			<artifactId>org.eclipse.emf.ecore.xmi</artifactId>
+			<version>2.16.0</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.6.1</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<excludes>
+								<exclude>.dummy.txt</exclude>
+							</excludes>
+							<directory>${xtend-gen-path}</directory>
+						</fileset>
+						<fileset>
+							<excludes>
+								<exclude>.dummy.txt</exclude>
+							</excludes>
+							<directory>${xtend-gen-path}</directory>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+
+			<!-- Adds the generated sources to the compiler input -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.9.1</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<!-- This should be in sync with xtext-maven-plugin//source-roots, 
+								except for /model directory -->
+							<sources>
+								<source>${xtend-gen-path}</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Generates the Xtend and Xcore models -->
+			<plugin>
+				<groupId>org.eclipse.xtext</groupId>
+				<artifactId>xtext-maven-plugin</artifactId>
+				<version>${xtext-version}</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<languages>
+						<language>
+							<setup>org.eclipse.emf.codegen.ecore.xtext.GenModelSupport</setup>
+						</language>
+						<language>
+							<setup>org.eclipse.xtend.core.XtendStandaloneSetup</setup>
+							<outputConfigurations>
+								<outputConfiguration>
+									<outputDirectory>${xtend-gen-path}</outputDirectory>
+								</outputConfiguration>
+							</outputConfigurations>
+						</language>
+						<language>
+							<setup>org.eclipse.emf.ecore.xcore.XcoreStandaloneSetup</setup>
+							<outputConfigurations>
+								<outputConfiguration>
+									<outputDirectory>${xcore-gen-path}</outputDirectory>
+								</outputConfiguration>
+							</outputConfigurations>
+
+						</language>
+					</languages>
+					<sourceRoots>
+						<root>${xtend-path}</root>
+						<root>${xcore-path}</root>
+					</sourceRoots>
+					<javaSourceVersion>1.8</javaSourceVersion>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.eclipse.core</groupId>
+						<artifactId>org.eclipse.core.resources</artifactId>
+						<version>${core-resources-version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.eclipse.xtend</groupId>
+						<artifactId>org.eclipse.xtend.core</artifactId>
+						<version>${xtext-version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.eclipse.emf</groupId>
+						<artifactId>org.eclipse.emf.codegen.ecore.xtext</artifactId>
+						<version>${ecore-xtext-version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.eclipse.emf</groupId>
+						<artifactId>org.eclipse.emf.ecore.xcore</artifactId>
+						<version>${ecore-xcore-version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.eclipse.emf</groupId>
+						<artifactId>org.eclipse.emf.ecore.xcore.lib</artifactId>
+						<version>${ecore-xcore-lib-version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
