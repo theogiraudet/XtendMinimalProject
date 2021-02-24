@@ -9,9 +9,9 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated model -->
       <package
-            uri="test"
-            class="test.TestPackage"
-            genModel="model/model.xcore"/>
+            uri="fr.istic.tools.scanexam.core"
+            class="fr.istic.tools.scanexam.core.CorePackage"
+            genModel="model/ScanExam.xcore"/>
    </extension>
 
 </plugin>
